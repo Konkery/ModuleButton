@@ -47,6 +47,7 @@
 - <mark style="background-color: lightblue">release</mark> - кнопка отпущена;
 - <mark style="background-color: lightblue">click</mark> - собственно клик;
 - <mark style="background-color: lightblue">hold</mark> - удержание;
+- <mark style="background-color: lightblue">changeState</mark> - смена состояния;
 </div>
 
 ### Возвращаемые данные
@@ -64,14 +65,14 @@ btn.Start();
 
 let t1;
 btn.on('press', () => {
-  print('pressed');
-  t1 = getTime();
+    print('pressed');
+    t1 = getTime();
 });
 
 btn.on('release', () => {
-  let t2 = getTime();
-  print(`released after ${(t2-t1).toFixed(2)}`);
-  t1 = t2;
+    let t2 = getTime();
+    print(`released after ${(t2-t1).toFixed(2)}`);
+    t1 = t2;
 });
 // Теперь несколько раз зажмем кнопку на какое то время
 ```

@@ -20,6 +20,8 @@ class ClassButton extends ClassSensor {
         let timeDelta = getTime() - this._Time0;
         let curr_state = digitalRead(this._Pins[0]);
 
+        if (curr_state !== this._LastState) this._Channels[0].emit('changeState');
+
         if (curr_state == 1 && this._LastState == 0) {  //кнопка отпущена
             if (timeDelta >= this._HoldTime)                        //кнопка удерживалась дольше 300мс
                 this._Channels[0].emit('hold');         
