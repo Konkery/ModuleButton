@@ -4,13 +4,12 @@
  */
 class ClassButton extends ClassSensor {
     constructor(opts) {
-        ClassSensor.call(this, opts, opts);
+        ClassSensor.call(this, opts);
         this._Debounce = (opts.debounce > 0) ? opts.debounce : 50;
         this._LastState = 1;
         this._Time0;
 
-        this.Configure({ holdTime: opts.holdTime || 0.3, 
-                         clickTime: opts.clickTime || 0.02 });
+        this.Configure(0, { holdTime: opts.holdTime || 0.3 });
     }
     /**
      * @method
@@ -22,10 +21,10 @@ class ClassButton extends ClassSensor {
 
         if (curr_state !== this._LastState) this._Channels[0].emit('changeState');
 
-        if (curr_state == 1 && this._LastState == 0) {  //кнопка отпущена
-            if (timeDelta >= this._HoldTime)                        //кнопка удерживалась дольше 300мс
+        if (curr_state == 1 && this._LastState == 0) {  // кнопка отпущена
+            if (timeDelta >= this._HoldTime)            // кнопка удерживалась дольше holdTime
                 this._Channels[0].emit('hold');         
-            if (timeDelta >= this._ClickTime && timeDelta < this._HoldTime)     //кнопка была нажата хотя бы 20 мс
+            if (timeDelta < this._HoldTime)
                 this._Channels[0].emit('click');
             
             this._Channels[0].emit('release');
@@ -52,19 +51,12 @@ class ClassButton extends ClassSensor {
     }
     Stop() {
         clearWatch(this._SetWatch);
+        this._SetWatch = null;
         this._ChStatus[0] = 0;
     }
-    Configure(opts) {
-        if (opts) {
-            let click_time = opts.clickTime;
-            let holdTime = opts.holdTime;
-
-            if ((!this._HoldTime || this._HoldTime > click_time) && click_time > 0) {
-                this._ClickTime = click_time;
-            }
-
-            if (holdTime > this._ClickTime) this._HoldTime = holdTime;
-        }
+    Configure(_chNum, opts) {
+        this._HoldTime = (opts.holdTime > 0.05) ? opts.holdTime : this._HoldTime;
+        this._Debounce = (typeof opts.debounce === 'number') ? opts.debounce : this._Debounce;
     }
 }
 
