@@ -17,9 +17,9 @@
 ## Описание
 <div style = "color: #555">
 
-Модуль предназначен для работы с цифровыми кнопками в рамках фреймворка EcoLite. Обеспечивает мониторинг состояния кнопки и её основные события. Модуль разработан в соответствии с нотацией архитектуры датчиков и является потомком класса [ClassSensor](https://github.com/Konkery/ModuleSensorArchitecture/blob/main/README.md). Взаимодействие осуществляется через 0-й канал. 
+Модуль предназначен для работы с цифровыми кнопками в рамках фреймворка Horizon. Обеспечивает мониторинг состояния кнопки и её основные события. Модуль разработан в соответствии с нотацией архитектуры датчиков и является потомком класса [ClassSensor](https://github.com/Konkery/ModuleSensorArchitecture/blob/main/README.md). Взаимодействие осуществляется через 0-й канал. 
 
-Функционал данного модуля позволяет применять кнопки в различных сценариях. При этом рекомендуем также ознакомиться с модулями [бистабильной кнопки](./README_BISTABLE.md) и [таймаут-кнопки](./README_TIMEOUT.md), которые будут удобны в некоторых отдельных случаях. 
+Функционал данного модуля позволяет применять кнопки в различных сценариях. При этом рекомендуем также ознакомиться с модулем [бистабильной кнопки](./README_BISTABLE.md) которая будут более удобна в некоторых сценариях. 
 
 </div>
 
@@ -27,19 +27,16 @@
 <div style = "color: #555">
 
 - <mark style="background-color: lightblue">_Debounce</mark> - время в мс, которое программа ждет утихания дребезга на пине;
-- <mark style="background-color: lightblue">_ClickTime</mark> - время в секундах, необходимое для срабатывания события 'click';
-- <mark style="background-color: lightblue">_HoldTime</mark> - время в секундах, необходимое для срабатывания события 'hold';
-- <mark style="background-color: lightblue">_LastState</mark> - текущее состояние кнопки;
-- <mark style="background-color: lightblue">_Time0</mark> - время последнего события на кнопке;
+- <mark style="background-color: lightblue">_HoldTime</mark> - время в секундах, необходимое для срабатывания события 'hold';на кнопке;
 - <mark style="background-color: lightblue">_Interval</mark> - функция SetInterval для опроса кнопки.
 </div>
 
 ### Методы
 <div style = "color: #555">
 
-- <mark style="background-color: lightblue">Start(_num_channel)</mark> - запускает мониторинг состояния кнопки;
-- <mark style="background-color: lightblue">Stop(_num_channel)</mark> - прекращает запускает мониторинг состояния кнопки;
-- <mark style="background-color: lightblue">OnSetWatch(_num_channel)</mark> - обработчик прерываний;
+- <mark style="background-color: lightblue">Start(_chNum)</mark> - запускает мониторинг состояния кнопки;
+- <mark style="background-color: lightblue">Stop(_chNum)</mark> - прекращает запускает мониторинг состояния кнопки;
+- <mark style="background-color: lightblue">OnSetWatch(_interruptState)</mark> - обработчик прерываний;
 </div>
 
 ### События
@@ -49,7 +46,6 @@
 - <mark style="background-color: lightblue">release</mark> - кнопка отпущена;
 - <mark style="background-color: lightblue">click</mark> - собственно клик;
 - <mark style="background-color: lightblue">hold</mark> - удержание;
-- <mark style="background-color: lightblue">changeState</mark> - смена состояния;
 </div>
 
 ### Возвращаемые данные
@@ -58,7 +54,7 @@
 </div>
 
 ### Примеры
-#### События press и release
+#### События press и click
 <div style = "color: #555">
 
 ```js
@@ -71,7 +67,7 @@ btn.on('press', () => {
     t1 = getTime();
 });
 
-btn.on('release', () => {
+btn.on('click', () => {
     let t2 = getTime();
     print(`released after ${(t2-t1).toFixed(2)}`);
     t1 = t2;
@@ -84,16 +80,15 @@ btn.on('release', () => {
     <img src='./res/example-1.png'>
 </div>
 
-#### События click и hold 
+#### Событие hold 
 ```js
-let btn = SensorManager.CreateDevice('10')[0];
+let btn = SensorManager.CreateDevice('btn')[0];
 // Опциональная настройка времени (в сек.) за которое срабатывает удержание
 btn.Configure({ holdTime: 0.3 });
 btn.Start();
 
-btn.on('click', () => { print('clicked'); });
 btn.on('hold',  () => { print('hold'); });
-//Теперь 1 раз зажмем кнопку и 2 раза просто кликнем по ней
+//Теперь несколько раз зажмем кнопку
 ```
 
 Результат выполнения:

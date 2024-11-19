@@ -1,8 +1,7 @@
-let btn = SensorManager.CreateDevice('10')[0];
-// Опциональная настройка времени (в сек.) за которое срабатывает удержание
-btn.Configure({ holdTime: 0.3 });
-btn.Start();
+let btn = SensorManager.CreateDevice('100')[0]
+  .Configure({ debounce: 20, holdTime: 1.5 })  
+  .Start();
 
-btn.on('click', () => { print('clicked'); });
+btn.on('press', () => print('press'));
+btn.on('click',  () => { print('click'); });
 btn.on('hold',  () => { print('hold'); });
-//Теперь 1 раз зажмем кнопку и 2 раза просто кликнем по ней
